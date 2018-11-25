@@ -1,5 +1,5 @@
 var userModel = require('./model/user');
-
+var socketObjects = [];
 module.exports = (server) => {
     var io = require('socket.io')(server,{
         reconnection: true
@@ -13,24 +13,33 @@ module.exports = (server) => {
 
         socket.on('send-userid', async function (obj) {
             let socketID = socket.id;
-            let getResult = await userModel.getUser({
-                _id: obj.userID + ''
-            });
-            if (getResult) {
-                //update
-                let updateResult = await userModel.correctUser({
-                    _id: getResult._id,
-                }, {
-                    timeActive: Date.now()
-                });
-                let roomchatID = obj.roomchatID
-                socket.broadcast.to(roomchatID).emit('receive-timestamp', {
-                    type: 'timestamp',
-                    time: updateResult.timeActive,
-                    userID: obj.userID + ''
-                })
-            }
-
+            let roomchatID = obj.roomchatID
+            // let getResult = await userModel.getUser({
+            //     _id: obj.userID + ''
+            // });
+            // if (getResult) { 
+            //     //update
+            //     let updateResult = await userModel.correctUser({
+            //         _id: getResult._id,
+            //     }, {
+            //         timeActive: Date.now()
+            //     });
+            //     let roomchatID = obj.roomchatID
+            //     socket.broadcast.to(roomchatID).emit('receive-timestamp', {
+            //         type: 'timestamp',
+            //         time: updateResult.timeActive,
+            //         userID: obj.userID + ''
+            //     })
+            // }
+            updateSocketObject({
+                userID: obj.userID,
+                socketID: socketID + ''
+            })
+            socket.broadcast.to(roomchatID).emit('receive-timestamp', {
+                type: 'timestamp',
+                time: Date.now(),
+                userID: obj.userID + ''
+            })
 
             // do here
         })
@@ -42,11 +51,24 @@ module.exports = (server) => {
             })
         })
 
+        socket.on('notification', function(obj){
+            let roomchatID = obj.roomchatID + '';
+            socket.broadcast.to(roomchatID).emit('notification', {
+                notification: obj.notification,
+                fromRoomchatID: roomchatID
+            })
+        })
+
         socket.on('reactive-status', function(obj){
             let roomchatID = obj.roomchatID  + '';
             socket.broadcast.to(roomchatID).emit('reactive-status', {
                 userID: obj.userID
             })
+        })
+
+        socket.on('arrange-roomchats', function(obj){
+            let roomchatID = obj.roomchatID  + '';
+            socket.broadcast.to(roomchatID).emit('arrange-roomchats', obj)
         })
 
 
@@ -147,9 +169,37 @@ module.exports = (server) => {
             });
             socket.broadcast.to(roomchatID).emit('receive-message', obj);
         })
-        socket.on('disconnect', function () {
-            console.log('disconnect')
-            // socket.emit('disconnect',{})
+        socket.on('disconnect', async function () {
+            let userID = findSocketObjectBySocketID(socket.id).userID;
+            let timeActive = Date.now();
+            let getResult = await userModel.getUser({
+                _id: userID
+            });
+            let updateResult = await userModel.correctUser({
+                _id: getResult._id,
+            }, {
+                timeActive: timeActive
+            });
+            console.log('runn: ',updateResult)
         })
     })
+}
+
+var updateSocketObject = (socketObj) => {
+    for(let i = 0;i < socketObjects.length; i++){
+        if(socketObjects[i].userID === socketObj.userID){
+            socketObjects[i].socketID = socketObj.socketID;
+            return;
+        }
+    }
+    socketObjects.push(socketObj);
+}
+
+var findSocketObjectBySocketID = (socketID) => {
+    for(let socketObj of socketObjects){
+        if(socketObj.socketID === socketID){
+            return socketObj;
+        }
+    }
+    return {}
 }

@@ -7,11 +7,18 @@ const passport = require("passport");
 
 
 
-router.get('',
+router.get('/many',
     passport.authenticate("jwt", {
         session: false
     }),
     fileController.getFiles
+)
+
+router.get('/',
+    passport.authenticate("jwt", {
+        session: false
+    }),
+    fileController.getOneFile
 )
 
 module.exports = router;

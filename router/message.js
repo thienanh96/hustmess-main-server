@@ -34,7 +34,15 @@ router.put('/many',
     }),
     messageController.updateMessages
 )
-router.delete('',
+
+router.put('/',
+    passport.authenticate("jwt", {
+        session: false
+    }),
+    messageController.updateOneMessage
+)
+
+router.delete('/',
     passport.authenticate("jwt", {
         session: false
     }),

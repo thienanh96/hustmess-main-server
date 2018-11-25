@@ -33,6 +33,7 @@ const uploads = require('./router/uploads')
 const downloads = require('./router/downloads')
 const services = require('./router/services');
 const files = require('./router/file');
+const notifications = require('./router/notification')
 // Port Number
 const port = process.env.PORT || 3333;
 
@@ -65,7 +66,7 @@ app.use('/uploads',uploads);
 app.use('/downloads',downloads);
 app.use('/services',services);
 app.use('/files',files);
-
+app.use('/notification',notifications);
 var server = require('http').Server(app);
 
 

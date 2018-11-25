@@ -124,10 +124,13 @@ module.exports.getRoomchats = async (req, res, next) => {
 
 module.exports.inspectDuplicateRoomchat = async (req, res, next) => {
     let userIDs = req.body.userIDs;
-    let getRoomchatResults = await roomchatModel.getRoomChats({
-        createdFromUserID: req.user._id
+    console.log('userIDS__',userIDs)
+    let getRoomchatUserResults = await roomchatUserRelationModel.getRoomChatUsers({
+        userID: req.user._id
     });
-    getRoomchatResultIDs = getRoomchatResults.map(el => el._id);
+
+    getRoomchatResultIDs = getRoomchatUserResults.map(el => el.roomChatID);
+    console.log('getRoomchatResultIDs__',getRoomchatResultIDs)
     let isDuplicate = false;
     let roomchatIDDuplicate = '';
     for (let id of getRoomchatResultIDs) {
@@ -138,7 +141,7 @@ module.exports.inspectDuplicateRoomchat = async (req, res, next) => {
         userIDs.push(req.user._id + '');
         console.log('log: ', usersInRoomchat)
         let resultCheck = utils.checkEqualArr(usersInRoomchat, userIDs)
-        console.log('resu: ', resultCheck, userIDs)
+        console.log('resu: ', resultCheck, id)
         if (resultCheck) {
             isDuplicate = true;
             roomchatIDDuplicate = id;

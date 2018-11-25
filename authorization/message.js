@@ -54,6 +54,7 @@ module.exports.authorizeManyGET = async (req, res, next) => {
 module.exports.authorizePOST = async (req, res, next) => {
     try {
         let roomChatID = req.body.roomChatID;
+        console.log('roomcht-id____',roomChatID)
         let getResults = await roomchatUserRelation.getRoomChatUsers({
             roomChatID: roomChatID
         });
@@ -82,7 +83,7 @@ module.exports.authorizeDELETE = async (req, res, next) => {
         let getResult = await messageModel.getOneMessage({
             _id: messageID
         });
-        if (getResult.fromUserID + '' !== req.user._id + '') {
+        if (getResult.fromUserID + '' === req.user._id + '') {
             return next();
         } else {
             return res.json({

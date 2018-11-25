@@ -89,11 +89,33 @@ module.exports.updateMessages = async (req, res, next) => {
     }
 }
 
+module.exports.updateOneMessage = async (req, res, next) => {
+    try {
+        let messageID = req.query.messageid;
+        let updateResults = await messageModel.updateMessage({
+            _id: messageID
+        }, {
+            $push: {
+                exclude: req.user._id + ''
+            }
+        })
+        return res.json({
+            success: true
+        })
+    } catch (error) {
+        throw error;
+        return res.json({
+            success: false
+        })
+    }
+}
+
 module.exports.deleteMessage = (req, res, next) => {
     let messageID = req.query.messageid;
     return messageModel.deleteMessage({
         _id: messageID
     }).then(result => {
+        
         return res.json({
             success: true,
             msg: 'success'

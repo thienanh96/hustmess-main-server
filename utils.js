@@ -22,10 +22,10 @@ module.exports.readProfilePhotoFromDisk = (userID, quality) => {
     }
 }
 
-module.exports.readImageFileFromDisk = (originalName, ext) => {
+module.exports.readImageFileFromDisk = (originalName, ext,roomchatID) => {
     ext = ext.split('.')[ext.split('.').length - 1].toLowerCase() + '';
     let buffer = fs.readFileSync(
-        "./uploads/fileupload/" + originalName
+        "./uploads/fileupload/" + roomchatID +'/' + originalName
     );
     let base64 = "data:image/" + ext + ";base64," + buffer.toString("base64");
     return base64;
@@ -66,13 +66,37 @@ module.exports.makeSquareImage = async (path) => {
         let photo;
         if(width >= height){
             let offset = (width - height)/2;
-            photo = imageSource.crop(offset,0,height,height).resize(80,80).getBase64Async(jimp.AUTO);
+                photo = imageSource.crop(offset,0,height,height).resize(80,80).getBase64Async(jimp.AUTO);
+
+            
         } else {
             let offset = (height - width)/2;
             photo = imageSource.crop(offset,0,width,width).resize(80,80).getBase64Async(jimp.AUTO);
         }
         return photo;
     } catch (error) {
-        return null;
+        throw error
+       return null
+    }
+}
+
+module.exports.getPhotoInfo = async (path) => {
+    try {
+        let imageSource = await jimp.read(path);
+        let width = imageSource.bitmap.width;
+        let height = imageSource.bitmap.height;
+        return {
+            size: {
+                width: width,
+                height: height
+            }
+        }
+    } catch (error) {
+        return {
+            size: {
+                width: null,
+                height: null
+            }
+        }
     }
 }
