@@ -25,19 +25,31 @@ module.exports.updateFriend = async (req, res, next) => {
         let secondUser = req.user._id + '';
         let newFriend = req.body;
         let putResult = await friendsModel.updateFriend({
-            $and: [{
+            $or: [{
+                $and: [{
                     firstUser: firstUser
                 },
                 {
                     secondUser: secondUser
                 }
-            ]
+                ],
+                $and: [{
+                    firstUser: firstUser
+                },
+                {
+                    secondUser: secondUser
+                }
+                ]
+            }]
         }, newFriend);
         return res.json({
-
+            success: true
         })
     } catch (error) {
-
+        console.log(error)
+        return res.json({
+            success: false
+        })
     }
 }
 
@@ -45,9 +57,9 @@ module.exports.updateFriend = async (req, res, next) => {
 module.exports.getFriends = async (req, res, next) => {
     try {
         let isApproved = req.query.approved;
-        if(isApproved === 'true'){
+        if (isApproved === 'true') {
             isApproved = true;
-        } else if (isApproved === 'false'){
+        } else if (isApproved === 'false') {
             isApproved = false;
         } else {
             return res.json({
@@ -58,15 +70,15 @@ module.exports.getFriends = async (req, res, next) => {
         let myID = req.user._id + '';
         let getResults = await friendsModel.getFriends({
             $or: [{
-                    firstUser: myID
-                },
-                {
-                    secondUser: myID
-                }
+                firstUser: myID
+            },
+            {
+                secondUser: myID
+            }
             ]
         });
-        let returnFriends = getResults.filter(el => el.approved === isApproved).map(el  => {
-            if(el.firstUser + '' === myID){
+        let returnFriends = getResults.filter(el => el.approved === isApproved).map(el => {
+            if (el.firstUser + '' === myID) {
                 return el.secondUser
             } else {
                 return el.firstUser
@@ -92,23 +104,23 @@ module.exports.deleteFriend = (req, res, next) => { // huy ket ban
     let secondUser = req.user._id + '';
     return friendsModel.deleteFriend({
         $or: [{
-                $and: [{
-                        firstUser: firstUser
-                    },
-                    {
-                        secondUser: secondUser
-                    }
-                ]
+            $and: [{
+                firstUser: firstUser
             },
             {
-                $and: [{
-                        firstUser: secondUser
-                    },
-                    {
-                        secondUser: firstUser
-                    }
-                ]
+                secondUser: secondUser
             }
+            ]
+        },
+        {
+            $and: [{
+                firstUser: secondUser
+            },
+            {
+                secondUser: firstUser
+            }
+            ]
+        }
         ]
 
     }).then(result => {
