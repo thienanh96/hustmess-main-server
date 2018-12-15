@@ -14,23 +14,6 @@ module.exports = (server) => {
         socket.on('send-userid', async function (obj) {
             let socketID = socket.id;
             let roomchatID = obj.roomchatID
-            // let getResult = await userModel.getUser({
-            //     _id: obj.userID + ''
-            // });
-            // if (getResult) { 
-            //     //update
-            //     let updateResult = await userModel.correctUser({
-            //         _id: getResult._id,
-            //     }, {
-            //         timeActive: Date.now()
-            //     });
-            //     let roomchatID = obj.roomchatID
-            //     socket.broadcast.to(roomchatID).emit('receive-timestamp', {
-            //         type: 'timestamp',
-            //         time: updateResult.timeActive,
-            //         userID: obj.userID + ''
-            //     })
-            // }
             updateSocketObject({
                 userID: obj.userID,
                 socketID: socketID + ''
@@ -136,6 +119,11 @@ module.exports = (server) => {
             socket.join(roomchatID);
         })
 
+        socket.on('leave-roomchat', function (obj) {
+            let roomchatID = obj.roomchatID  + '';
+            socket.leave(roomchatID);
+        })
+
         socket.on('call-request', function (obj) {
             let roomchatID = obj.roomchatID;
             socket.broadcast.to(roomchatID).emit('call-request', obj);
@@ -154,8 +142,12 @@ module.exports = (server) => {
         })
 
         socket.on('delete-user-from-roomchat', function (obj) {
+            let roomchatID = obj.roomchatID;
+            socket.broadcast.to(roomchatID).emit('delete-user-from-roomchat', obj);
+        })
 
-        });
+
+
         socket.on('send-message', function (obj) {
             let contentText = obj.contentText;
             let contentFile = obj.contentFile;
@@ -169,18 +161,7 @@ module.exports = (server) => {
             });
             socket.broadcast.to(roomchatID).emit('receive-message', obj);
         })
-        socket.on('disconnect', async function () {
-            let userID = findSocketObjectBySocketID(socket.id).userID;
-            let timeActive = Date.now();
-            let getResult = await userModel.getUser({
-                _id: userID
-            });
-            let updateResult = await userModel.correctUser({
-                _id: getResult._id,
-            }, {
-                timeActive: timeActive
-            });
-            console.log('runn: ',updateResult)
+        socket.on('disconnect', function () {
         })
     })
 }
