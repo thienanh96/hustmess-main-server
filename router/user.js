@@ -25,6 +25,13 @@ router.get('/me',
     userController.getMe
 )
 
+router.get('/all',
+    passport.authenticate("jwt", {
+        session: false
+    }),
+    userController.getAllUsers
+)
+
 router.get('/search/friends',
     passport.authenticate("jwt", {
         session: false
