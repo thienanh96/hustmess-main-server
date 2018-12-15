@@ -21,9 +21,10 @@ module.exports.createFriend = (req, res, next) => { //ket ban
 
 module.exports.updateFriend = async (req, res, next) => {
     try {
-        let firstUser = req.query.firstuser;
+        let firstUser = req.query.id;
+        console.log(req.query);
         let secondUser = req.user._id + '';
-        let newFriend = req.body;
+        console.log(req.body);
         let putResult = await friendsModel.updateFriend({
             $or: [{
                 $and: [{
@@ -41,7 +42,7 @@ module.exports.updateFriend = async (req, res, next) => {
                 }
                 ]
             }]
-        }, newFriend);
+        }, {approved: req.body.approved});
         return res.json({
             success: true
         })
@@ -77,18 +78,36 @@ module.exports.getFriends = async (req, res, next) => {
             }
             ]
         });
-        let returnFriends = getResults.filter(el => el.approved === isApproved).map(el => {
-            if (el.firstUser + '' === myID) {
-                return el.secondUser
-            } else {
-                return el.firstUser
-            }
-        })
-        return res.json({
-            success: true,
-            myID: req.user._id + '',
-            friends: returnFriends
-        })
+        if (isApproved){
+            let returnFriends = getResults.filter(el => el.approved === isApproved).map(el => {
+                if (el.firstUser + '' === myID) {
+                    return el.secondUser
+                } else {
+                    return el.firstUser
+                }
+            })
+            return res.json({
+                success: true,
+                myID: req.user._id + '',
+                friends: returnFriends
+            })
+        }
+        else {
+            let returnFriends = getResults.filter(el => el.approved === isApproved);
+            let friendsFirst = [];
+            let friendsSecond = [];
+            returnFriends.forEach(friend => {
+                if (friend.firstUser + '' === myID) friendsSecond.push(friend.secondUser)
+                else friendsFirst.push(friend.firstUser);
+            })
+            return res.json({
+                success: true,
+                myID: req.user._id + '',
+                friendsFirst: friendsFirst,
+                friendsSecond: friendsSecond
+            })
+        }
+          
     } catch (error) {
         throw error;
         return res.json({

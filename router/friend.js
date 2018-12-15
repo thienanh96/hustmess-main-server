@@ -14,7 +14,7 @@ router.post('/', //them loi moi ket ban
     friendsController.createFriend
 )
 
-router.get('/many', //them loi moi ket ban
+router.get('/many', //tra ve danh sach ban
     passport.authenticate("jwt", {
         session: false
     }),

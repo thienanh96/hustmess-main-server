@@ -30,10 +30,10 @@ module.exports.getFriend = function (query){
     return Friends.findOne(query);
 }
 
-module.exports.updateFriend = function(query,newFriends){
-    return Friends.findOneAndUpdate(query, newFriends, {
-        new: true
-    });
+module.exports.updateFriend = function(query, newFriends){
+    console.log(query);
+    console.log(newFriends)
+    return Friends.findOneAndUpdate(query,newFriends);
 }
 
 module.exports.deleteFriend = function(query){
