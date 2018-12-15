@@ -5,7 +5,6 @@ const cors = require('cors');
 const passport = require('passport');
 const mongoose = require('mongoose');
 const config = require('./config/database');
-const ExpressPeerServer = require('peer').ExpressPeerServer;
 
 // Connect To Database
 mongoose.connect(config.databaseUrl);

@@ -78,6 +78,25 @@ module.exports.getUsers = async (req, res, next) => { //POST route
     }
 }
 
+module.exports.getAllUsers = async (req, res, next) => { //get route
+    try {
+        let allUsers = await userModel.getUsers({});
+        // let sortedUsers = utils.sortArray(userIDs, getResults);
+        for (let user of allUsers){
+            user.profileImage.lowQuality = utils.readProfilePhotoFromDisk(user._id, 'low');
+        }
+        return res.json({
+            success: true,
+            users: allUsers
+        })
+    } catch (error) {
+        return res.json({
+            success: false,
+            users: []
+        })
+    }
+}
+
 module.exports.getMyFriends = async (req, res, next) => {
     try {
         let imageQuality = req.query.quality + ''
