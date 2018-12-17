@@ -5,6 +5,7 @@ const utils = require('../utils');
 module.exports.updateUser = (req, res, next) => {
     let userID = req.user._id + '';
     let updatedUser = req.body;
+    console.log('updated user: ',updatedUser)
     userModel.correctUser({
         _id: userID
     }, updatedUser).then((result) => {

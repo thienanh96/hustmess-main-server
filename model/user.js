@@ -33,7 +33,8 @@ const UserSchema = mongoose.Schema({
     detail: {
         peerID: String,
         class: String,
-        grade: String
+        grade: String,
+        mssv: String
     }
 });
 
