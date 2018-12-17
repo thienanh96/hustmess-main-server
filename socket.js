@@ -146,6 +146,10 @@ module.exports = (server) => {
             socket.broadcast.to(roomchatID).emit('delete-user-from-roomchat', obj);
         })
 
+        socket.on('friend-request', function (obj) {
+            socket.broadcast.to('world').emit('friend-request', obj);
+        })
+
 
 
         socket.on('send-message', function (obj) {

@@ -12,7 +12,7 @@ module.exports.createNotification = async (req, res, next) => {
         toUserID: req.body.toUserID,
         detail: req.body.detail,
         seen: false,
-        time: req.body.time
+        time: Date.now()
     });
     return NotificationModel.createNotification(newNotification).then(result => {
         return res.json({
