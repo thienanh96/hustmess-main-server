@@ -74,7 +74,7 @@ require('./socket')(server);
 
 
 // Start Server
-server.listen(port, () => {
+server.listen(process.env.PORT || port, () => {
     console.log('Server started on port ' + port);
 });
 
