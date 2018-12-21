@@ -6,10 +6,6 @@ const passport = require('passport');
 const mongoose = require('mongoose');
 const config = require('./config/database');
 
-app.use(express.static(__dirname + '/dist'));
-app.get('/*', function (req, res) {
-    res.sendFile(path.join(__dirname + '/dist/index.html'));
-});
 // Connect To Database
 mongoose.connect(config.databaseUrl);
 
@@ -26,6 +22,12 @@ mongoose.connection.on('error', (err) => {
 const app = express();
 // CORS Middleware
 app.use(cors());
+
+app.use(express.static(__dirname + '/dist'));
+app.get('/*', function (req, res) {
+    res.sendFile(path.join(__dirname + '/dist/index.html'));
+});
+
 const user = require('./router/user');
 const roomchat = require('./router/roomchat');
 const friends = require('./router/friend');
