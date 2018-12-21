@@ -1,3 +1,3 @@
 module.exports = {
-    databaseUrl: 'mongodb://localhost:27017/hustmess'
+    databaseUrl: 'mongodb://thienanhnguyen06:22051996Anh@ds157499.mlab.com:57499/heroku_lmvdxbm5'
 }
