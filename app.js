@@ -6,7 +6,6 @@ const passport = require('passport');
 const mongoose = require('mongoose');
 const config = require('./config/database');
 
-
 // Connect To Database
 mongoose.connect(config.databaseUrl);
 
@@ -26,7 +25,7 @@ app.use(cors());
 
 app.use(express.static(__dirname + '/dist'));
 app.get('/*', function (req, res) {
-    res.sendFile(path.join(__dirname + '/dist/<name-of-app>/index.html'));
+    res.sendFile(path.join(__dirname + '/dist/index.html'));
 });
 
 const user = require('./router/user');
