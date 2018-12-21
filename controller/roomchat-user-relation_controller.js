@@ -105,7 +105,7 @@ module.exports.updateRoomchatUser = async (req, res, next) => {
                     })
                 } else {
                     query = {
-                        isAdmin: false
+                        isAdmin: false 
                     }
                 }
             } else {

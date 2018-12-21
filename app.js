@@ -6,6 +6,10 @@ const passport = require('passport');
 const mongoose = require('mongoose');
 const config = require('./config/database');
 
+app.use(express.static(__dirname + '/dist'));
+app.get('/*', function (req, res) {
+    res.sendFile(path.join(__dirname + '/dist/<name-of-app>/index.html'));
+});
 // Connect To Database
 mongoose.connect(config.databaseUrl);
 
@@ -58,14 +62,14 @@ app.set('view engine', 'ejs');
 app.use('/user', user);
 app.use('/message', message);
 app.use('/roomchat', roomchat);
-app.use('/',authentication);
-app.use('/roomchatuser',roomchatUser);
-app.use('/friend',friends);
-app.use('/uploads',uploads);
-app.use('/downloads',downloads);
-app.use('/services',services);
-app.use('/files',files);
-app.use('/notification',notifications);
+app.use('/', authentication);
+app.use('/roomchatuser', roomchatUser);
+app.use('/friend', friends);
+app.use('/uploads', uploads);
+app.use('/downloads', downloads);
+app.use('/services', services);
+app.use('/files', files);
+app.use('/notification', notifications);
 var server = require('http').Server(app);
 
 
