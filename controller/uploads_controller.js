@@ -84,7 +84,7 @@ module.exports.uploadFiles = (req, res, next) => {
             return res.json({
                 success: true,
                 fileType: 'application',
-                downloadLink: 'http://localhost:3333/downloads/' + inDiskFileName + '?roomchatid=' + req.query.roomchatid,
+                downloadLink: 'https://hustmess-server.herokuapp.com/downloads/' + inDiskFileName + '?roomchatid=' + req.query.roomchatid,
                 fileName: inDiskFileName,
                 originalName: filename
             })
