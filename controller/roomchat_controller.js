@@ -141,7 +141,6 @@ module.exports.inspectDuplicateRoomchat = async (req, res, next) => {
             roomChatID: id,
         });
         let usersInRoomchat = getRoomchatUserResults.map(el => el.userID);
-        userIDs.push(req.user._id + '');
         console.log('log: ', usersInRoomchat)
         let resultCheck = utils.checkEqualArr(usersInRoomchat, userIDs)
         console.log('resu: ', resultCheck, id)
