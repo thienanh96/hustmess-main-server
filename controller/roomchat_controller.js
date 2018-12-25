@@ -124,7 +124,7 @@ module.exports.getRoomchats = async (req, res, next) => {
 
 module.exports.inspectDuplicateRoomchat = async (req, res, next) => {
     let userIDs = req.body.userIDs;
-    console.log('userIDS__',userIDs)
+    console.log('userIDS__',userIDs,req.user._id)
     let getRoomchatUserResults = await roomchatUserRelationModel.getRoomChatUsers({
         userID: req.user._id
     });
