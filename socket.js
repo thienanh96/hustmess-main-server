@@ -12,15 +12,16 @@ module.exports = (server) => {
         })
 
         socket.on('send-userid', async function (obj) {
-            let socketID = socket.id;
             let roomchatID = obj.roomchatID
-            updateSocketObject({
-                userID: obj.userID,
-                socketID: socketID + ''
+            let timestamp = Date.now();
+            await userModel.correctUser({
+                _id: obj.userID
+            },{
+                timeActive: timestamp
             })
             socket.broadcast.to(roomchatID).emit('receive-timestamp', {
                 type: 'timestamp',
-                time: Date.now(),
+                time: timestamp,
                 userID: obj.userID + ''
             })
 
