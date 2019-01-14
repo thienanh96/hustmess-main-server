@@ -228,6 +228,7 @@ module.exports.getMessages = async (req, res, next) => {
                 userProfile: userProfile
             })
         }
+        console.log('co van de: ',returnMessages)
         return res.json({
             success: true,
             messages: returnMessages,
