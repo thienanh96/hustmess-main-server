@@ -23,10 +23,6 @@ const app = express();
 // CORS Middleware
 app.use(cors());
 
-var http = require("http");
-setInterval(function() {
-    http.get("https://hustmess.herokuapp.com");
-}, 300000); // every 5 minutes (300000)
 
 const user = require('./router/user');
 const roomchat = require('./router/roomchat');
